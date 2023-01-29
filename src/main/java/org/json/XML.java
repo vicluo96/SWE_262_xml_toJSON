@@ -459,7 +459,6 @@ public class XML {
         // <<
 
         token = x.nextToken();
-        //System.out.println(token);
         currentPath = currentPath + "/" + token;
         if (currentPath.equals(targetPath)) {
             foundPathFlag = true;
@@ -604,25 +603,8 @@ public class XML {
 
                 } else if (token == GT) {
                     // Content, between <...> and </...>
-                    /*
-                    if(foundPathFlag){
-                        jsonObject.accumulate(tagName, replacement);
-                        foundPathFlag = false;
-                        return false;
-                    }
-
-                     */
 
                     for (;;) {
-                        /*
-                        if(foundPathFlag){
-                            jsonObject.accumulate(tagName, replacement);
-                            foundPathFlag = false;
-                            break;
-                        }
-
-                         */
-
                         token = x.nextContent();
                         System.out.println("after closing tag " + token);
                         if (token == null) {
