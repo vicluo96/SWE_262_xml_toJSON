@@ -1247,6 +1247,107 @@ public class XMLTest {
             fail("file writer error: " +e.getMessage());
         }
     }
+
+    @Test
+    public void testing(){
+        String xmlStr =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                        "<addresses xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+
+                        "   xsi:noNamespaceSchemaLocation='test.xsd'>\n"+
+                        "   <address>\n"+
+                        "       <name>Joe Tester</name>\n"+
+                        "       <street>[CDATA[Baker street 5]</street>\n"+
+                        "       <NothingHere/>\n"+
+                        "       <TrueValue>true</TrueValue>\n"+
+                        "       <FalseValue>false</FalseValue>\n"+
+                        "       <NullValue>null</NullValue>\n"+
+                        "       <PositiveValue>42</PositiveValue>\n"+
+                        "       <NegativeValue>-23</NegativeValue>\n"+
+                        "       <DoubleValue>-23.45</DoubleValue>\n"+
+                        "       <Nan>-23x.45</Nan>\n"+
+                        "       <ArrayOfNum>1, 2, 3, 4.1, 5.2</ArrayOfNum>\n"+
+                        "   </address>\n"+
+                        "</addresses>";
+
+        String expectedStr =
+                "{\"addresses\":{\"address\":{\"street\":\"[CDATA[Baker street 5]\","+
+                        "\"name\":\"Joe Tester\",\"NothingHere\":\"\",TrueValue:true,\n"+
+                        "\"FalseValue\":false,\"NullValue\":null,\"PositiveValue\":42,\n"+
+                        "\"NegativeValue\":-23,\"DoubleValue\":-23.45,\"Nan\":-23x.45,\n"+
+                        "\"ArrayOfNum\":\"1, 2, 3, 4.1, 5.2\"\n"+
+                        "},\"xsi:noNamespaceSchemaLocation\":"+
+                        "\"test.xsd\",\"xmlns:xsi\":\"http://www.w3.org/2001/"+
+                        "XMLSchema-instance\"}}";
+
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        Reader reader = new StringReader(xmlStr);
+        JSONObject jsonObject = XML.toJSONObject(reader);
+
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter("./src/test/ogTest.json");
+            fw.write(jsonObject.toString());
+            fw.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Util.compareActualVsExpectedJsonObjects(jsonObject,expectedJsonObject);
+    }
+
+    @Test
+    public void testingPersonal(){
+        String xmlStr =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                        "<addresses xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+
+                        "   xsi:noNamespaceSchemaLocation='test.xsd'>\n"+
+                        "   <address>\n"+
+                        "       <name>Joe Tester</name>\n"+
+                        "       <street>[CDATA[Baker street 5]</street>\n"+
+                        "       <NothingHere/>\n"+
+                        "       <TrueValue>true</TrueValue>\n"+
+                        "       <FalseValue>false</FalseValue>\n"+
+                        "       <NullValue>null</NullValue>\n"+
+                        "       <PositiveValue>42</PositiveValue>\n"+
+                        "       <NegativeValue>-23</NegativeValue>\n"+
+                        "       <DoubleValue>-23.45</DoubleValue>\n"+
+                        "       <Nan>-23x.45</Nan>\n"+
+                        "       <ArrayOfNum>1, 2, 3, 4.1, 5.2</ArrayOfNum>\n"+
+                        "   </address>\n"+
+                        "</addresses>";
+
+        String expectedStr =
+                "{\"addresses\":{\"address\":{\"street\":\"[CDATA[Baker street 5]\","+
+                        "\"name\":\"Joe Tester\",\"NothingHere\":\"\",TrueValue:true,\n"+
+                        "\"FalseValue\":false,\"NullValue\":null,\"PositiveValue\":42,\n"+
+                        "\"NegativeValue\":-23,\"DoubleValue\":-23.45,\"Nan\":-23x.45,\n"+
+                        "\"ArrayOfNum\":\"1, 2, 3, 4.1, 5.2\"\n"+
+                        "},\"xsi:noNamespaceSchemaLocation\":"+
+                        "\"test.xsd\",\"xmlns:xsi\":\"http://www.w3.org/2001/"+
+                        "XMLSchema-instance\"}}";
+
+        JSONObject replacementObj = new JSONObject();
+        replacementObj.put("class", "swe262");
+        replacementObj.put("developers", "danny and victor");
+        replacementObj.put("task", 5);
+        replacementObj.put("objective", "replace object in path with this object");
+
+        JSONPointer jp = new JSONPointer("/addresses/address/TrueValue");
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        Reader reader = new StringReader(xmlStr);
+        JSONObject jsonObject = XML.toJSONObject(reader, jp, replacementObj);
+
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter("./src/test/newFile.json");
+            fw.write(jsonObject.toString());
+            fw.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Util.compareActualVsExpectedJsonObjects(jsonObject,expectedJsonObject);
+    }
 }
 
 
