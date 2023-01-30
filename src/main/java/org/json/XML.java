@@ -464,8 +464,6 @@ public class XML {
             foundPathFlag = true;
         }
 
-        System.out.println(currentPath);
-        System.out.println(foundPathFlag);
         // <!
 
         if (token == BANG) {
@@ -530,7 +528,6 @@ public class XML {
         } else {
 
             tagName = (String) token;
-            System.out.println("this is token " + tagName);
             token = null;
             jsonObject = new JSONObject();
             boolean nilAttributeFound = false;
@@ -539,17 +536,14 @@ public class XML {
             for (;;) {
                 if (token == null) {
                     token = x.nextToken();
-                    System.out.println("this is now token " + token);
                 }
                 // attribute = value
                 if (token instanceof String) {
                     string = (String) token;
                     token = x.nextToken();
-                    System.out.println("in infitinte " + token);
 
                     if (token == EQ) {
                         token = x.nextToken();
-                        System.out.println("after equal " + token);
                         if (!(token instanceof String)) {
                             throw x.syntaxError("Missing value");
                         }
@@ -557,14 +551,11 @@ public class XML {
                         if (config.isConvertNilAttributeToNull()
                                 && NULL_ATTR.equals(string)
                                 && Boolean.parseBoolean((String) token)) {
-                            System.out.println("HERE1");
                             nilAttributeFound = true;
                         } else if(config.getXsiTypeMap() != null && !config.getXsiTypeMap().isEmpty()
                                 && TYPE_ATTR.equals(string)) {
-                            System.out.println("HERE2");
                             xmlXsiTypeConverter = config.getXsiTypeMap().get(token);
                         } else if (!nilAttributeFound) {
-                            System.out.println("HERE3");
                             jsonObject.accumulate(string,
                                     config.isKeepStrings()
                                             ? ((String) token)
@@ -606,7 +597,6 @@ public class XML {
 
                     for (;;) {
                         token = x.nextContent();
-                        System.out.println("after closing tag " + token);
                         if (token == null) {
                             if (tagName != null) {
                                 throw x.syntaxError("Unclosed tag " + tagName);
@@ -616,14 +606,9 @@ public class XML {
                             string = (String) token;
                             if (string.length() > 0) {
                                 if(xmlXsiTypeConverter != null) {
-                                    System.out.println("HERE4");
                                     jsonObject.accumulate(config.getcDataTagName(),
                                             stringToValue(string, xmlXsiTypeConverter));
                                 } else {
-                                    System.out.println("HERE5");
-                                    System.out.println(config.getcDataTagName());
-                                    System.out.println(config.isKeepStrings() ? string : stringToValue(string));
-                                    System.out.println("tagName after accumulate " + tagName + " and token " + token);
                                     jsonObject.accumulate(config.getcDataTagName(),
                                             config.isKeepStrings() ? string : stringToValue(string));
 
@@ -632,7 +617,6 @@ public class XML {
 
                         } else if (token == LT) {
                             // Nested element
-                            System.out.println("token is " + token + " and tagName is " + tagName);
                             if (parse(x, jsonObject, tagName, config, currentPath, targetPath, foundPathFlag, replacement)) {
                                 if (config.getForceList().contains(tagName)) {
                                     // Force the value to be an array
