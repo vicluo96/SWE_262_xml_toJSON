@@ -634,7 +634,15 @@ public class XML {
                                     } else if (jsonObject.length() == 1
                                             && jsonObject.opt(config.getcDataTagName()) != null) {
                                         if(foundPathFlag){
-                                            context.accumulate(tagName,replacement);
+                                            /**
+                                             *  check if your target has nested objects or is just a key value pair
+                                             *  by comparing the target path to the current path
+                                             */
+                                            if(currentPath.equals(targetPath)){
+                                                context.accumulate(tagName,replacement.opt(tagName));
+                                            } else {
+                                                context.accumulate(tagName,replacement);
+                                            }
                                         } else {
                                             context.accumulate(tagName, jsonObject.opt(config.getcDataTagName()));
                                         }
