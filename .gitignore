@@ -19,3 +19,4 @@ build
 /src/main/java/org/json/*.class
 /src/main/java/M2Test.class
 /src/main/java/json-java.jar
+/src/test/ogTest.json
