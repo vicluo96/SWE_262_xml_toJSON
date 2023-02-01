@@ -56,6 +56,18 @@ public class XML {
     public static final String TYPE_ATTR = "xsi:type";
 
     /**
+     * Early Termination: author: Victor Luo
+     * Quit the recursion as soon as the currect path is found to improve the performance
+     */
+
+    private static class EarlyTermination extends Exception{
+        public JSONObject subObject;
+        public EarlyTermination(JSONObject obj){
+            subObject = obj;
+        }
+    }
+
+    /**
      * Creates an iterator for navigating Code Points in a string instead of
      * characters. Once Java7 support is dropped, this can be replaced with
      * <code>
