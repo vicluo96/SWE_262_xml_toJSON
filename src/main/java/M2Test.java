@@ -17,12 +17,12 @@ public class M2Test {
                 "  </address>\n" +
                 "</contact>";
 
-//        try {
-//            JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/street/"));
-//            System.out.println(jobj);
-//        } catch (JSONException e) {
-//            System.out.println(e);
-//        }
+        try {
+            JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/street/"));
+            System.out.println(jobj);
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
 
         System.out.println("-----------------------");
 
