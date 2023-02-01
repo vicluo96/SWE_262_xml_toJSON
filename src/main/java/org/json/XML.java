@@ -1188,8 +1188,31 @@ public class XML {
      * @param reader The XML source reader.
      * @param path Target JSON sub object to return.
      * @return A JSONObject containing the structured data from the XML string.
-     * @throws JSONException Thrown if there is an errors while parsing the string
+     * @throws  JSONException Thrown if there is an errors while parsing the string
+     * @catch EarlyTermination Thrown if the correct path is found
      */
+    public static JSONObject toJSONObject(Reader reader, JSONPointer path) throws JSONException{
+        JSONObject jo = new JSONObject();
+        XMLTokener x = new XMLTokener(reader);
+        String currentPath = "";
+        String targetPath = path.toString();
+
+        while (x.more()) {
+            x.skipPast("<");
+            if(x.more()) {
+                try {
+                    parse(x, jo, null, XMLParserConfiguration.ORIGINAL, targetPath, currentPath);
+                }catch(EarlyTermination e){
+                    return e.subObject;
+                }catch (JSONPointerException e2){
+                    e2.printStackTrace();
+                    return null;
+                }
+            }
+        }
+
+        return jo;
+    }
 
     /**
      * Authored by Danny Do
