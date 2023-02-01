@@ -872,12 +872,10 @@ public class XML {
                                             && jsonObject.opt(config.getcDataTagName()) != null) {
                                         context.accumulate(tagName, jsonObject.opt(config.getcDataTagName()));
                                         if (currentPath.equals(targetPath)) {
-                                            System.out.println(currentPath);
                                             throw new EarlyTermination(context);
                                         }
                                     } else {
                                         if (currentPath.equals(targetPath)) {
-                                            System.out.println(currentPath);
                                             throw new EarlyTermination(jsonObject);
                                         }else{
                                             context.accumulate(tagName, jsonObject);
