@@ -449,6 +449,8 @@ public class XML {
 
     /**
      * Authored by Danny Do
+     *
+     * Scan content following tag and replace target object once it has been found
      */
     private static boolean parse(XMLTokener x, JSONObject context, String name, XMLParserConfiguration config, String currentPath, String targetPath, boolean foundPathFlag, JSONObject replacement)
             throws JSONException {
@@ -1220,12 +1222,6 @@ public class XML {
      *
      * All values are converted as strings, for 1, 01, 29.0 will not be coerced to
      * numbers but will instead be the exact value as seen in the XML document.
-     *
-     * @param reader The XML source reader.
-     * @param path Target JSON to replace.
-     * @param replacement The JSON object to insert.
-     * @return A JSONObject containing the structured data from the XML string.
-     * @throws JSONException Thrown if there is an errors while parsing the string
      */
 
     public static JSONObject toJSONObject(Reader reader, JSONPointer path, JSONObject replacement) throws JSONException{
@@ -1235,6 +1231,9 @@ public class XML {
         String currentPath = "";
 
         String targetPath = path.toString();
+        if((targetPath.substring(targetPath.length() - 1)).equals("/")){
+            throw new JSONPointerException("Invalid given target path");
+        }
 
         while (x.more()) {
             x.skipPast("<");
