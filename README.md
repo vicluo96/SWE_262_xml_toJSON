@@ -106,17 +106,17 @@ For more information on files, please see [FILES.md](https://github.com/stleary/
 
 For the release history, please see [RELEASES.md](https://github.com/stleary/JSON-java/blob/master/docs/RELEASES.md)
 
-#Milestone 2 
+# Milestone 2 
 
 New Feature: 
 
-Add an overloaded static method to the XML class with the signature
+Add an overloaded static method to the XML class with the signature <br>
 `static JSONObject toJSONObject(Reader reader, JSONPointer path)` 
 which does, inside the library, the same thing that task 2 of milestone 1 did in client code, before writing to disk. Being this done inside the library, you should be able to do it more efficiently. Specifically, you shouldn't need to read the entire XML file, as you can stop parsing it as soon as you find the object in question.
-Add an overloaded static method to the XML class with the signature
+Add an overloaded static method to the XML class with the signature <br>
 `static JSONObject toJSONObject(Reader reader, JSONPointer path, JSONObject replacement)`
 which does, inside the library, the same thing that task 5 of milestone 1 did in client code, before writing to disk. Are there any possible performance gains from doing this inside the library? If so, implement them in your version of the library.
 Write unit tests that use these two new functions, both for obtaining correct results and for testing error conditions.
 
-Build and run instruction:
+## Build and run instruction:
 Same as the process in JSON-Java library
