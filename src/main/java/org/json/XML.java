@@ -1197,6 +1197,10 @@ public class XML {
         String currentPath = "";
         String targetPath = path.toString();
 
+        if((targetPath.substring(targetPath.length() - 1)).equals("/")){
+            throw new JSONPointerException("Invalid given target path");
+        }
+
         while (x.more()) {
             x.skipPast("<");
             if(x.more()) {

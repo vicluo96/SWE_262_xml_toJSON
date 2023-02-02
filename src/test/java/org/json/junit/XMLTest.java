@@ -1356,6 +1356,28 @@ public class XMLTest {
                 "</contact>";
 
         try {
+            JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/street/"));
+            System.out.println(jobj);
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void M2SubObjectTest(){
+        String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>\n" +
+                "       <test>123</test>\n" +
+                "    </zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
+
+        try {
             JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/street"));
             System.out.println(jobj);
         } catch (JSONException e) {
