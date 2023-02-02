@@ -112,7 +112,9 @@ New Feature:
 
 Add an overloaded static method to the XML class with the signature <br>
 `static JSONObject toJSONObject(Reader reader, JSONPointer path)` 
-which does, inside the library, the same thing that task 2 of milestone 1 did in client code, before writing to disk. Being this done inside the library, you should be able to do it more efficiently. Specifically, you shouldn't need to read the entire XML file, as you can stop parsing it as soon as you find the object in question.
+
+Use recursion to find the suboject of target path. To improve performance, as soon as the target path is found, the program will stop reading the rest of the xml, and return the target JSON sub object. To do this, I created `Early termination` to stop the recursion process when the sub object is found.<br>
+
 Add an overloaded static method to the XML class with the signature <br>
 `static JSONObject toJSONObject(Reader reader, JSONPointer path, JSONObject replacement)`
 which does, inside the library, the same thing that task 5 of milestone 1 did in client code, before writing to disk. Are there any possible performance gains from doing this inside the library? If so, implement them in your version of the library.
