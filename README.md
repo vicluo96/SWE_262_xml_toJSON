@@ -121,4 +121,4 @@ Add an overloaded static method to the XML class with the signature <br>
 Use recursion to replace the target sub object with the given object. This function converts the XML file to JSON while it is looking for the target path. Once found, the target object is replaced, and the rest of the file is converted to JSON and returned. 
 
 ## Build and run instruction:
-Same as the process in JSON-Java library
+Same as the process in JSON-Java library, remember change the test file name to M2Test.java
