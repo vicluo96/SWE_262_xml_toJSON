@@ -117,8 +117,8 @@ Use recursion to find the suboject of target path. To improve performance, as so
 
 Add an overloaded static method to the XML class with the signature <br>
 `static JSONObject toJSONObject(Reader reader, JSONPointer path, JSONObject replacement)`
-which does, inside the library, the same thing that task 5 of milestone 1 did in client code, before writing to disk. Are there any possible performance gains from doing this inside the library? If so, implement them in your version of the library.
-Write unit tests that use these two new functions, both for obtaining correct results and for testing error conditions.
+
+Use recursion to replace the target sub object with the given object. This function converts the XML file to JSON while it is looking for the target path. Once found, the target object is replaced, and the rest of the file is converted to JSON and returned. 
 
 ## Build and run instruction:
 Same as the process in JSON-Java library
