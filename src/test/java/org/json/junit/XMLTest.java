@@ -1397,6 +1397,147 @@ public class XMLTest {
             System.out.println(e);
         }
     }
+
+    @Test
+    public void M3ConcatenationTest(){
+        String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>\n" +
+                "       <test>123</test>\n" +
+                "    </zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
+
+        String expectedJsonString =
+                "{\"swe262_contact\":{" +
+                    "\"swe262_name\":\"Crista Lopes\"," +
+                    "\"swe262_nick\":\"Crista\"," +
+                    "\"swe262_address\":{" +
+                        "\"swe262_street\":\"Ave of Nowhere\"," +
+                        "\"swe262_zipcode\":{" +
+                            "\"swe262_test\":123}" +
+                        "}" +
+                    "}" +
+                "}";
+
+
+        // define functional interface
+        interface MyFunction {
+            String apply(String a);
+        }
+
+        // implementation of the functional interface using lambda
+        MyFunction addPrefix = (a) -> "swe262_" + a;
+
+        //pass in function to test
+        try {
+            JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), addPrefix::apply);
+            //System.out.println(jobj);
+            assertEquals(jobj.toString(), expectedJsonString);
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void M3ReversalTest(){
+        String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>\n" +
+                "       <test>123</test>\n" +
+                "    </zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
+
+        String expectedJsonString =
+                "{\"tcatnoc\":{" +
+                    "\"eman\":\"Crista Lopes\"," +
+                    "\"sserdda\":{" +
+                        "\"edocpiz\":{" +
+                            "\"tset\":123}," +
+                        "\"teerts\":\"Ave of Nowhere\"}," +
+                    "\"kcin\":\"Crista\"}" +
+                "}";
+
+
+        // define functional interface
+        interface MyFunction {
+            String apply(String a);
+        }
+
+        // implementation of the functional interface using lambda
+        MyFunction reverseKey = (a) -> new StringBuilder(a).reverse().toString();
+
+        //pass in function to test
+        try {
+            JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), reverseKey::apply);
+            //System.out.println(jobj);
+            assertEquals(jobj.toString(), expectedJsonString);
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void M3StringContainsTest(){
+        String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>\n" +
+                "       <test>123</test>\n" +
+                "    </zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
+
+        String expectedJsonString =
+                "{\"has_A_contact\":{" +
+                    "\"nick\":\"Crista\"," +
+                    "\"has_A_name\":\"Crista Lopes\"," +
+                    "\"has_A_address\":{" +
+                        "\"zipcode\":{" +
+                            "\"test\":123}," +
+                        "\"street\":\"Ave of Nowhere\"}" +
+                    "}" +
+                "}";
+
+
+        // define functional interface
+        interface MyFunction {
+            String apply(String a);
+        }
+
+        // implementation of the functional interface using lambda
+        MyFunction containsA = (a) -> {
+            if(a.contains("a")){
+                a = "has_A_" + a;
+                return a;
+            }
+            return a;
+        };
+
+        //pass in function to test
+        try {
+            JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), containsA::apply);
+            //System.out.println(jobj);
+            assertEquals(jobj.toString(), expectedJsonString);
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
+    }
+
+
+
 }
 
 
