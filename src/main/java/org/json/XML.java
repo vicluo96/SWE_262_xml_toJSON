@@ -585,19 +585,19 @@ public class XML {
                         // Force the value to be an array
                         if (nilAttributeFound) {
                             //context.append(tagName, JSONObject.NULL);
-                            context.append(keyTransformer.apply(keyTransformer.apply(tagName)), JSONObject.NULL);
+                            context.append(keyTransformer.apply(tagName), JSONObject.NULL);
                         } else if (jsonObject.length() > 0) {
-                            context.append(keyTransformer.apply(keyTransformer.apply(tagName)), jsonObject);
+                            context.append(keyTransformer.apply(tagName), jsonObject);
                         } else {
-                            context.put(keyTransformer.apply(keyTransformer.apply(tagName)), new JSONArray());
+                            context.put(keyTransformer.apply(tagName), new JSONArray());
                         }
                     } else {
                         if (nilAttributeFound) {
-                            context.accumulate(keyTransformer.apply(keyTransformer.apply(tagName)), JSONObject.NULL);
+                            context.accumulate(keyTransformer.apply(tagName), JSONObject.NULL);
                         } else if (jsonObject.length() > 0) {
-                            context.accumulate(keyTransformer.apply(keyTransformer.apply(tagName)), jsonObject);
+                            context.accumulate(keyTransformer.apply(tagName), jsonObject);
                         } else {
-                            context.accumulate(keyTransformer.apply(keyTransformer.apply(tagName)), "");
+                            context.accumulate(keyTransformer.apply(tagName), "");
                         }
                     }
                     return false;
