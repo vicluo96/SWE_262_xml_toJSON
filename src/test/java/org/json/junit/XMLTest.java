@@ -4,12 +4,6 @@ package org.json.junit;
 Public Domain.
 */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -22,9 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.*;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 import org.junit.rules.TemporaryFolder;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -1260,11 +1258,19 @@ public class XMLTest {
                 "  </address>\n" +
                 "</contact>";
 
+        String expectedJsonString =
+                "{\"contact\":{" +
+                    "\"nick\":\"Crista\"," +
+                    "\"address\":{" +
+                        "\"zipcode\":92614," +
+                        "\"street\":\"Ave of the Arts\"}," +
+                    "\"name\":\"Crista Lopes\"}" +
+                "}";
+
         try {
             JSONObject replacement = XML.toJSONObject("<street>Ave of the Arts</street>\n");
-            System.out.println("Given replacement: " + replacement);
             JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/street"), replacement);
-            System.out.println(jobj);
+            assertEquals(jobj.toString(), expectedJsonString);
         } catch (JSONException e) {
             System.out.println(e);
         }
@@ -1284,17 +1290,27 @@ public class XMLTest {
                 "  </address>\n" +
                 "</contact>";
 
+        String expectedJsonString =
+                "{\"contact\":{" +
+                    "\"nick\":\"Crista\"," +
+                    "\"address\":{" +
+                        "\"zipcode\":{" +
+                            "\"street\":\"Ave of the Arts\"}," +
+                        "\"street\":\"Ave of Nowhere\"}," +
+                    "\"name\":\"Crista Lopes\"}" +
+                "}";
         try {
             JSONObject replacement = XML.toJSONObject("<street>Ave of the Arts</street>\n");
-            System.out.println("Given replacement: " + replacement);
+            //System.out.println("Given replacement: " + replacement);
             JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/zipcode"), replacement);
-            System.out.println(jobj);
+            //System.out.println(jobj);
+            assertEquals(jobj.toString(), expectedJsonString);
         } catch (JSONException e) {
             System.out.println(e);
         }
     }
 
-    @Test
+    @Test(expected = JSONPointerException.class)
     public void M2ReplacementTestInvalidPath(){
         String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
                 "<contact>\n"+
@@ -1308,14 +1324,9 @@ public class XMLTest {
                 "  </address>\n" +
                 "</contact>";
 
-        try {
-            JSONObject replacement = XML.toJSONObject("<street>Ave of the Arts</street>\n");
-            System.out.println("Given replacement: " + replacement);
-            JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/zipcode/"), replacement);
-            System.out.println(jobj);
-        } catch (JSONException e) {
-            System.out.println(e);
-        }
+
+        JSONObject replacement = XML.toJSONObject("<street>Ave of the Arts</street>\n");
+        JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/zipcode/"), replacement);
     }
 
 
@@ -1334,16 +1345,18 @@ public class XMLTest {
                 "  </address>\n" +
                 "</contact>";
 
+        String expectedJsonString = "{\"zipcode\":{\"test\":123},\"street\":\"Ave of Nowhere\"}";
         try {
 
             JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address"));
-            System.out.println(jobj);
+            //System.out.println(jobj);
+            assertEquals(jobj.toString(),expectedJsonString);
         } catch (JSONException e) {
             System.out.println(e);
         }
     }
 
-    @Test
+    @Test(expected = JSONPointerException.class)
     public void M2InvalidInputSubobjectTest(){
         String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
                 "<contact>\n"+
@@ -1355,12 +1368,9 @@ public class XMLTest {
                 "  </address>\n" +
                 "</contact>";
 
-        try {
             JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/street/"));
-            System.out.println(jobj);
-        } catch (JSONException e) {
-            System.out.println(e);
-        }
+            //System.out.println(jobj);
+
     }
 
     @Test
@@ -1377,9 +1387,12 @@ public class XMLTest {
                 "  </address>\n" +
                 "</contact>";
 
+        String expectedJsonString = "{\"street\":\"Ave of Nowhere\"}";
+
         try {
             JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address/street"));
-            System.out.println(jobj);
+            assertEquals(jobj.toString(), expectedJsonString);
+            //System.out.println(jobj);
         } catch (JSONException e) {
             System.out.println(e);
         }
