@@ -120,5 +120,14 @@ Add an overloaded static method to the XML class with the signature <br>
 
 Use recursion to replace the target sub object with the given object. This function converts the XML file to JSON while it is looking for the target path. Once found, the target object is replaced, and the rest of the file is converted to JSON and returned. 
 
+# Milestone 3
+
+New Feature:
+
+Add an overloaded static method to the XML class with the signature <br>
+`static JSONObject toJSONObject(Reader reader, YOURTYPEHERE keyTransformer)`
+
+Use functional programming to transform all keys according to given client function. Performance is increased through this method by transforming keys while the conversion from XML to JSON is being done.This can save time compared to key transformation after conversion because it eliminates the need to make multiple passes over the data. <br>
+
 ## Build and run instruction:
 Same as the process in JSON-Java library, remember change the test file name to M2Test.java
