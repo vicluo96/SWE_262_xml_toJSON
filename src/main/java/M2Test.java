@@ -4,6 +4,7 @@ import org.json.JSONPointer;
 import org.json.XML;
 
 import java.io.StringReader;
+import java.util.function.Function;
 
 public class M2Test {
     public static void main(String[] args) {
@@ -31,6 +32,16 @@ public class M2Test {
                     " <zipcode>92612</zipcode>");
             System.out.println("Given replacement: " + replacement);
             JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), new JSONPointer("/contact/address"), replacement);
+            System.out.println(jobj);
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("-----------------------");
+
+        try {
+            Function<String, String> keyTransformer = (key) -> key + "_swe262!";
+            JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), keyTransformer);
             System.out.println(jobj);
         } catch (JSONException e) {
             System.out.println(e);
