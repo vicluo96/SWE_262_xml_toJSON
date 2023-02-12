@@ -12,7 +12,7 @@ public class M3Test {
         // implementation of the functional interface using lambda
         MyFunction addPrefix = (a) -> "swe262_" + a;
 
-        File xmlFile = new File("gnwikibooks-20221201-pages-logging.xml");
+        File xmlFile = new File("frwikiquote-20221201-flow.xml");
         Reader fileReader = null;
         try {
             fileReader = new FileReader(xmlFile);
