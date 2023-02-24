@@ -15,18 +15,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its external
@@ -2712,5 +2705,43 @@ public class JSONObject {
         return new JSONException(
             "JavaBean object contains recursively defined member variable of key " + quote(key)
         );
+    }
+
+    /** Author Victor Luo
+     * Use Spliterator to traverse and split the nodes iteratively by using stack,
+     * and return the JSONObject as stream
+     * */
+
+    public Stream<JSONObject> toStream() {
+        Spliterator<JSONObject> spliterator = new JSONObjectSpliterator(this);
+        return StreamSupport.stream(spliterator, false);
+    }
+
+    private static class JSONObjectSpliterator extends Spliterators.AbstractSpliterator<JSONObject> {
+        private final Deque<Object> stack = new ArrayDeque<>();
+
+        protected JSONObjectSpliterator(JSONObject jsonObject) {
+            super(Long.MAX_VALUE, Spliterator.ORDERED | Spliterator.IMMUTABLE);
+            stack.push(Objects.requireNonNull(jsonObject));
+        }
+
+        @Override
+        public boolean tryAdvance(java.util.function.Consumer<? super JSONObject> action) {
+            while (!stack.isEmpty()) {
+                Object obj = stack.pop();
+                if (obj instanceof JSONArray) {
+                    JSONArray jsonArray = (JSONArray) obj;
+                    for (int i = jsonArray.length() - 1; i >= 0; i--) {
+                        stack.push(jsonArray.get(i));
+                    }
+                } else if (obj instanceof JSONObject) {
+                    JSONObject jsonObject = (JSONObject) obj;
+                    action.accept(jsonObject);
+                    jsonObject.keySet().forEach(key -> stack.push(jsonObject.get(key)));
+                }
+                return true;
+            }
+            return false;
+        }
     }
 }
