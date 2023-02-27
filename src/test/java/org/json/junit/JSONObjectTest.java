@@ -24,15 +24,9 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import org.json.CDL;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONPointerException;
-import org.json.JSONString;
-import org.json.JSONTokener;
-import org.json.XML;
+import org.json.*;
 import org.json.junit.data.BrokenToString;
 import org.json.junit.data.ExceptionalBean;
 import org.json.junit.data.Fraction;
@@ -53,6 +47,7 @@ import org.json.junit.data.RecursiveBeanEquals;
 import org.json.junit.data.Singleton;
 import org.json.junit.data.SingletonEnum;
 import org.json.junit.data.WeirdList;
+import org.junit.Assert;
 import org.junit.Test;
 import org.json.junit.Util;
 
@@ -3508,5 +3503,141 @@ public class JSONObjectTest {
                 })
                 .put("b", 2);
         assertFalse(jo1.similar(jo3));
+    }
+
+    @Test
+    public void M4ConcatJsonObjectTest(){
+        String jsonString =
+            "{\"contact\":{" +
+                "\"name\":\"Crista Lopes\"," +
+                "\"nick\":\"Crista\"," +
+                "\"address\":{" +
+                    "\"street\":\"Ave of Nowhere\"," +
+                    "\"zipcode\":{" +
+                        "\"test\":123}" +
+                    "}" +
+                "}" +
+            "}";
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        String expectedJsonString =
+            "{\"contact\":{" +
+                "\"nick\":\"Crista\"," +
+                "\"address\":{" +
+                    "\"zipcode\":{" +
+                        "\"test\":123," +
+                        "\"transformation\":\"on each node\"" +
+                    "}," +
+                    "\"street\":\"Ave of Nowhere\"," +
+                    "\"transformation\":\"on each node\"" +
+                "}," +
+                "\"name\":\"Crista Lopes\"," +
+                "\"transformation\":\"on each node\"" +
+                "}," +
+            "\"transformation\":\"on each node\"" +
+            "}";
+
+        try {
+            jsonObject.toStream().forEach(node -> {
+                node.put("transformation","on each node");
+            });
+            Assert.assertEquals(expectedJsonString, jsonObject.toString());
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void M4ExtractJsonObjectTest(){
+        String jsonString =
+            "{\"contact\":[{" +
+                "\"name\":\"Crista Lopes\"," +
+                "\"nick\":\"Crista\"," +
+                "\"address\":{" +
+                    "\"street\":\"Ave of Nowhere\"," +
+                    "\"zipcode\":{" +
+                            "\"test\":123}" +
+                    "}" +
+                "}," +
+               "{" +
+                    "\"name\":\"John Smith\"," +
+                    "\"nick\":\"Jo\"," +
+                    "\"address\":{" +
+                        "\"street\":\"St of Nowhere\"," +
+                        "\"zipcode\":{" +
+                            "\"test\":321}" +
+                        "}" +
+                    "}" +
+                "]" +
+            "}";
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        try {
+            List<String> nicknames = jsonObject.toStream()
+                    .filter(node -> node.has("nick"))
+                    .map(node -> node.getString("nick"))
+                    .collect(Collectors.toList());
+            Assert.assertEquals(Arrays.asList("Crista", "Jo"), nicknames);
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void M4TranformFilteredNodesJsonObjectTest(){
+        String jsonString =
+            "{\"contact\":[{" +
+                "\"name\":\"Crista Lopes\"," +
+                "\"nick\":\"Crista\"," +
+                "\"address\":{" +
+                    "\"street\":\"Ave of Nowhere\"," +
+                    "\"zipcode\":{" +
+                            "\"test\":123}" +
+                    "}" +
+                "}," +
+               "{" +
+                    "\"name\":\"John Smith\"," +
+                    "\"nick\":\"Jo\"," +
+                    "\"address\":{" +
+                        "\"street\":\"St of Nowhere\"," +
+                        "\"zipcode\":{" +
+                            "\"test\":321}" +
+                    "}" +
+                "}]" +
+            "}";
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        String expectedJsonString =
+            "{\"contact\":[{" +
+                "\"nick\":\"Crista\"," +
+                "\"address\":{" +
+                    "\"zipcode\":{" +
+                    "}," +
+                    "\"street\":\"Ave of Nowhere\"" +
+                "}," +
+                "\"name\":\"Crista Lopes\"" +
+                "}," +
+               "{" +
+                    "\"nick\":\"Jo\"," +
+                    "\"address\":{" +
+                        "\"zipcode\":{" +
+                            "\"test\":321}," +
+                        "\"street\":\"St of Nowhere\"" +
+                    "}," +
+                    "\"name\":\"John Smith\"}" +
+                "]" +
+            "}";
+
+        try {
+            jsonObject.toStream()
+                    .filter(node -> node.optString("test").equals("123"))
+                    .forEach(node -> node.remove("test"));
+            Assert.assertEquals(expectedJsonString, jsonObject.toString());
+        } catch (JSONException e) {
+            System.out.println(e);
+        }
     }
 }

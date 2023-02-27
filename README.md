@@ -129,5 +129,18 @@ Add an overloaded static method to the XML class with the signature <br>
 
 Use functional programming to transform all keys according to given client function. Performance is increased through this method by transforming keys while the conversion from XML to JSON is being done.This can save time compared to key transformation after conversion because it eliminates the need to make multiple passes over the data. <br>
 
+# Milestone 4
+
+New Feature:
+
+Add streaming method to the library that allow the client code to chain operations on JSON nodes. <br>
+`// in client space` <br>
+`JSONObject obj = XML.toJSONObject("<Books><book><title>AAA</title><author>ASmith</author></book><book><title>BBB</title><author>BSmith</author></book></Books>");` <br>
+`obj.toStream().forEach(node -> do some transformation, possibly based on the path of the node);` <br>
+`List<String> titles = obj.toStream().map(node -> extract value for key "title").collect(Collectors.toList());` <br>
+`obj.toStream().filter(node -> node with certain properties).forEach(node -> do some transformation);` <br>
+
+These stream operations apply to JSONObject, and are started by transforming those objects into streams with the new toStream() method.
+
 ## Build and run instruction:
 Same as the process in JSON-Java library, remember change the test file name to M2Test.java
