@@ -143,4 +143,4 @@ Add streaming method to the library that allow the client code to chain operatio
 These stream operations apply to JSONObject, and are started by transforming those objects into streams with the new toStream() method.
 
 ## Build and run instruction:
-Same as the process in JSON-Java library, remember change the test file name to M2Test.java
+Same as the process in JSON-Java library, remember change the test file name to M2, M3 or M4Test.java
