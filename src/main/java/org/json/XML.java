@@ -9,6 +9,8 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Iterator;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 
@@ -1491,6 +1493,54 @@ public class XML {
         }
 
         return jo;
+    }
+
+    /**
+     * Milestone 5
+     * Authored by Danny Do
+     *
+     * Read an XML file into a JSON object asynchronously,
+     * replace all they key with the new key specified in users function
+     *
+     * All values are converted as strings, for 1, 01, 29.0 will not be coerced to
+     * numbers but will instead be the exact value as seen in the XML document.
+     *
+     * @param reader The XML source reader.
+     * @param keyTransformer The user defined function that determine new key
+     * @param jsonObjectConsumer The user defined function that determines what to do with the converted object
+     * @param exceptionHandler The user defined function that handles errors
+     * @return void
+     * @throws  JSONException Thrown if there is an errors while parsing the string
+     */
+
+    public static void toJSONObject(Reader reader, Function<String,String> keyTransformer,Consumer<JSONObject> jsonObjectConsumer, Consumer<Exception> exceptionHandler) throws JSONException{
+        JSONObject jo = new JSONObject();
+        XMLTokener x = new XMLTokener(reader);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            CompletableFuture.supplyAsync(
+                    () -> {
+                        while (x.more()) {
+                            x.skipPast("<");
+                            if (x.more()) {
+                                try {
+                                    parse(x, jo, null, XMLParserConfiguration.ORIGINAL, keyTransformer);
+                                } catch (JSONPointerException e2) {
+                                    e2.printStackTrace();
+                                    return null;
+                                }
+                            }
+                        }
+                        return jo;
+                    }, executor
+            ).thenAccept(jsonObjectConsumer);
+        } catch (Exception e) {
+            exceptionHandler.accept(e);
+        }
+
+        executor.shutdown();
+
     }
 
     /**
