@@ -4,25 +4,20 @@ package org.json.junit;
 Public Domain.
 */
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.json.*;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import org.junit.jupiter.api.Assertions;
 import org.junit.rules.TemporaryFolder;
 
+
 import static org.junit.Assert.*;
+
+
 
 
 /**
@@ -1534,6 +1529,21 @@ public class XMLTest {
         } catch (JSONException e) {
             System.out.println(e);
         }
+    }
+
+    @Test
+    public void M5testToJSONObject_successful() {
+        String xml = "<person><name>John</name><age>30</age></person>";
+        StringReader reader = new StringReader(xml);
+        StringWriter writer = new StringWriter();
+
+        XML.toJSONObject(reader, (a) -> a, (JSONObject jo) -> {
+            jo.write(writer);
+            String result = writer.toString();
+            Assertions.assertEquals("{\"person\":{\"name\":\"John\",\"age\":30}}", result);
+        }, (Exception e) -> {
+            Assertions.fail("Unexpected exception: " + e.getMessage());
+        });
     }
 
 }
