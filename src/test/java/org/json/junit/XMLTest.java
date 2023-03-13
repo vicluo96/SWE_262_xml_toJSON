@@ -1547,13 +1547,48 @@ public class XMLTest {
     }
 
     @Test
-    public void testToJSONObject_failure() {
+    public void M5testToJSONObject_failure() {
         String xml = "<person><name>John</name><age>30</age></person>";
         StringReader reader = new StringReader(xml);
         XML.toJSONObject(reader, (a) -> a, (JSONObject jo) -> {
             Assertions.fail("Callback should not be called in case of failure");
         }, (Exception e) -> {
             Assertions.assertEquals("Error parsing XML", e.getMessage());
+        });
+    }
+
+    @Test
+    public void M5testToJSONObject_successful_longer_input() {
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>\n" +
+                "       <test>123</test>\n" +
+                "    </zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
+        String expectedJsonString =
+                "{\"has_A_contact\":{" +
+                        "\"nick\":\"Crista\"," +
+                        "\"has_A_name\":\"Crista Lopes\"," +
+                        "\"has_A_address\":{" +
+                        "\"zipcode\":{" +
+                        "\"test\":123}," +
+                        "\"street\":\"Ave of Nowhere\"}" +
+                        "}" +
+                        "}";
+        StringReader reader = new StringReader(xml);
+        StringWriter writer = new StringWriter();
+
+        XML.toJSONObject(reader, (a) -> a, (JSONObject jo) -> {
+            jo.write(writer);
+            String result = writer.toString();
+            Assertions.assertEquals(expectedJsonString, result);
+        }, (Exception e) -> {
+            Assertions.fail("Unexpected exception: " + e.getMessage());
         });
     }
 
