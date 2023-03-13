@@ -145,7 +145,7 @@ These stream operations apply to JSONObject, and are started by transforming tho
 # Milestone 5
 New Feature:
 Add asynchronous methods to the library that allow the client code to proceed, while specifying what to do when the JSONObject becomes available.
-The user can also choose to transform the xml key or not: <br>
+The user can also choose to transform the xml keys or not: <br>
 `XML.toJSONObject(aReader, (key) -> (newKey), (JSONObject jo) -> {jo.write(aWriter);}, (Exception e) -> {/* something went wrong */});`
 <br>
 This is useful for when reading very large files.
