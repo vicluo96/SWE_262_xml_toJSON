@@ -1546,6 +1546,17 @@ public class XMLTest {
         });
     }
 
+    @Test
+    public void testToJSONObject_failure() {
+        String xml = "<person><name>John</name><age>30</age></person>";
+        StringReader reader = new StringReader(xml);
+        XML.toJSONObject(reader, (a) -> a, (JSONObject jo) -> {
+            Assertions.fail("Callback should not be called in case of failure");
+        }, (Exception e) -> {
+            Assertions.assertEquals("Error parsing XML", e.getMessage());
+        });
+    }
+
 }
 
 
