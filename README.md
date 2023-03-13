@@ -142,5 +142,12 @@ Add streaming method to the library that allow the client code to chain operatio
 
 These stream operations apply to JSONObject, and are started by transforming those objects into streams with the new toStream() method.
 
+# Milestone 5
+New Feature:
+Add asynchronous methods to the library that allow the client code to proceed, while specifying what to do when the JSONObject becomes available.
+The user can also choose to transform the xml key or not:
+`XML.toJSONObject(aReader, (key) -> (newKey), (JSONObject jo) -> {jo.write(aWriter);}, (Exception e) -> {/* something went wrong */});`
+This is useful for when reading very large files.
+
 ## Build and run instruction:
 Same as the process in JSON-Java library, remember change the test file name to M2, M3 or M4Test.java
