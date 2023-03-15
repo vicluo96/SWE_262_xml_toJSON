@@ -8,19 +8,20 @@ public class M3Test {
         interface MyFunction {
             String apply(String a);
         }
-
         // implementation of the functional interface using lambda
         MyFunction addPrefix = (a) -> "swe262_" + a;
 
-        File xmlFile = new File("frwikiquote-20221201-flow.xml");
-        Reader fileReader = null;
-        try {
-            fileReader = new FileReader(xmlFile);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>92614</zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
 
-        JSONObject jobj = XML.toJSONObject(fileReader, addPrefix::apply);
+        JSONObject jobj = XML.toJSONObject(new StringReader(xmlString), addPrefix::apply);
 
         FileWriter file = null;
         try {

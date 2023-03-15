@@ -151,4 +151,4 @@ The user can also choose to transform the xml keys or not: <br>
 This is useful for when reading very large files.
 
 ## Build and run instruction:
-Same as the process in JSON-Java library, remember change the test file name to M2, M3 or M4Test.java
+Same as the process in JSON-Java library, remember change the test file name to M2Test.java, M3Test.java, M4Test.java, or M5Test.java

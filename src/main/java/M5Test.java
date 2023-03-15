@@ -2,9 +2,7 @@ import org.json.JSONObject;
 import org.json.XML;
 
 import java.io.*;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class M5Test {
     public static void main(String[] args) throws IOException {
@@ -13,17 +11,19 @@ public class M5Test {
         interface MyFunction {
             String apply(String a);
         }
-
         // implementation of the functional interface using lambda
-        MyFunction addPrefix = (a) -> "swe262_" + a;
+        MyFunction addPrefix = (a) -> "swe262_!" + a;
 
-        File xmlFile = new File("frwikiquote-20221201-flow.xml");
-        Reader fileReader = null;
-        try {
-            fileReader = new FileReader(xmlFile);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        //string to read
+        String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>92614</zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
 
         //function for writing
         interface MyWriteFunction {
@@ -31,6 +31,7 @@ public class M5Test {
         }
 
         FileWriter file = null;
+
         try {
             file = new FileWriter("output.json");
         } catch (IOException e) {
@@ -45,14 +46,14 @@ public class M5Test {
             }
         };
 
-        ////function for exceptions
+        //function for exceptions
         Consumer<Exception> exceptionHandler = new Consumer<Exception>() {
             public void accept(Exception e) {
                 e.printStackTrace();
             }
         };
 
-        XML.toJSONObject(fileReader, addPrefix::apply, writeToFile::apply, exceptionHandler);
+        XML.toJSONObject(new StringReader(xmlString), addPrefix::apply, writeToFile::apply, exceptionHandler);
 
         for(int i = 0; i < 5; i++) {
             System.out.println(i);

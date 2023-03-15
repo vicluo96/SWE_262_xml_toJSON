@@ -7,9 +7,6 @@ import java.util.stream.Collectors;
 public class M4Test {
     public static void main(String[] args) {
         JSONObject obj = XML.toJSONObject("<Books><book><title>AAA</title><author>ASmith</author></book><book><title>BBB</title><author>BSmith</author></book></Books>");
-//        obj.toStream().forEach(node -> do some transformation, possibly based on the path of the node);
-//        List<String> titles = obj.toStream().map(node -> extract value for key "title").collect(Collectors.toList());
-//        obj.toStream().filter(node -> node with certain properties).forEach(node -> do some transformation);
         // Do some transformation on each node
         System.out.println(obj.toString());
         System.out.println("-------------------------------");
