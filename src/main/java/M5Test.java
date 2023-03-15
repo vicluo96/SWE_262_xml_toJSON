@@ -56,7 +56,7 @@ public class M5Test {
         XML.toJSONObject(new StringReader(xmlString), addPrefix::apply, writeToFile::apply, exceptionHandler);
 
         for(int i = 0; i < 5; i++) {
-            System.out.println(i);
+            System.out.println("writing to output.json... " + ((i+1) * 20) + "%" );
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
